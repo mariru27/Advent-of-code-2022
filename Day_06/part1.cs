@@ -11,15 +11,13 @@ bool CheckDifferentChars(string input)
   return chars.Count == input.Length;
 }
 
-int a = 0;
 int b = 4;
 while(b < lines[0].Length)
 {
-  string sub = lines[0].Substring(a, b - a);
+  string sub = lines[0].Substring(b - 4, 4);
   if (CheckDifferentChars(sub))
     break;
   b++;
-  a++;
 }
 
 Console.WriteLine(b);
