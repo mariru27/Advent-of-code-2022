@@ -37,14 +37,14 @@ void UpdateTotalSizeForDirectories()
     {
       currentItem = stack.Pop();
       Visited.Add(currentItem);
-      sum += currentItem.Size;
       var z = filesystem.Where(a => a.Key.Name == currentItem.Name).FirstOrDefault();
       if (z.Value != null)
       {
         foreach (var item in z.Value)
         {
-          if (!Visited.Contains(item))
+          if (!Visited.Contains(item) && item.ItemTypeResult == ItemType.DIR)
             stack.Push(item);
+          sum += item.Size;
         }
       }
     }
