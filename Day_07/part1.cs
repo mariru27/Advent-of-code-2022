@@ -1,8 +1,10 @@
-// See https://aka.ms/new-console-template for more information
+using aoc_2022;
+using System.Linq.Expressions;
+using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
-using AOC_2022;
-
-const string inputPath = @"C:\Users\Marina Rusu\source\repos\AOC-2022\AOC-2022\input.txt";
+const string inputPath = @"C:\Users\Marina\source\repos\aoc-2022\aoc-2022\input.txt";
 string[] lines = File.ReadAllLines(inputPath);
 Dictionary<Item, List<Item>> filesystem = new Dictionary<Item, List<Item>>();
 List<Item> rememberDirOrder = new List<Item>();
@@ -37,7 +39,7 @@ void UpdateTotalSizeForDirectories()
     {
       currentItem = stack.Pop();
       Visited.Add(currentItem);
-      var z = filesystem.Where(a => a.Key.Name == currentItem.Name).FirstOrDefault();
+      var z = filesystem.Where(a => a.Key.AbsolutePath == currentItem.AbsolutePath).FirstOrDefault();
       if (z.Value != null)
       {
         foreach (var item in z.Value)
@@ -61,7 +63,7 @@ void AddNode(Command aLastCommand, string aStringItem)
       string name = aStringItem.Split(" ")[2];
       if (name == "/")
       {
-        rootItem = new Item(name, ItemType.DIR, 0);
+        rootItem = new Item(name, ItemType.DIR, 0, "");
         break;
       }
       if (name == "..")
@@ -69,12 +71,12 @@ void AddNode(Command aLastCommand, string aStringItem)
         //moves out one level
         foreach (var isItem in filesystem)
         {
-          if (isItem.Value.Where(a => a.Name == rootItem.Name).Any())
+          if (isItem.Value.Where(a => a.AbsolutePath == rootItem.AbsolutePath).Any())
             rootItem = isItem.Key;
         }
         break;
       }
-      rootItem = new Item(name, ItemType.DIR, 0);
+      rootItem = new Item(name, ItemType.DIR, 0, rootItem.AbsolutePath);
       //rememberDirOrder.Add(rootItem);
       break;
     case Command.LS:
@@ -82,11 +84,11 @@ void AddNode(Command aLastCommand, string aStringItem)
       if (!filesystem.ContainsKey(rootItem))
       {
         filesystem.Add(rootItem, new List<Item>());
-        filesystem[rootItem].Add(new Item(aStringItem));
+        filesystem[rootItem].Add(new Item(aStringItem, rootItem.AbsolutePath));
       }
       else
       {
-        filesystem[rootItem].Add(new Item(aStringItem));
+        filesystem[rootItem].Add(new Item(aStringItem, rootItem.AbsolutePath));
       }
       break;
     default:
