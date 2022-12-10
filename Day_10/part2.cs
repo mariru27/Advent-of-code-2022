@@ -20,7 +20,7 @@ void KeppSignalStrength()
 
 bool Intersects()
 {
-  if(cycle == X || cycle == X-1 || cycle == X+1)
+  if(cycle % 40 == X || cycle %40 == X+1 || cycle%40 == X+2)
   {
     return true;
   }
@@ -43,7 +43,7 @@ void Draw()
 
 void SolutionPart1(string line)
 {
-    Draw();
+  Draw();
   KeppSignalStrength();
   if (line == "noop")
   {
@@ -66,7 +66,7 @@ foreach (var line in lines)
   SolutionPart1(line);
 }
 
-for (int i = 0; i < cycle; i++)
+for (int i = 0; i <= cycle; i++)
 {
   Console.Write(screen[i]);
   if(i % 40 == 0)
